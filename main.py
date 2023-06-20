@@ -8,28 +8,19 @@ from kivy.core.window import Window
 from kivy.uix.scrollview import ScrollView
 from instructions import txt_instruction, txt_test1, txt_test2, txt_test3, txt_sits
 from ruffier import test
-#Seconds
-
 from seconds import Seconds
 from sits import Sits
 from runner import Runner
-
-
 Window.clearcolor = (.87, 0.54, 0.8, 0.3)
 btn_color = (0.98, 0.31, 0.8, 1)
-
-
 age = 7
 name = ""
 p1, p2, p3 = 0, 0, 0
 def check_int(str_num):
-   # возвращает число или False, если строка не конвертируется
    try:
        return int(str_num)
    except:
        return False
-
-
 class InstrScr(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -88,15 +79,11 @@ class PulseScr(Screen):
         outer.add_widget(line)
         outer.add_widget(self.btn)
         self.add_widget(outer)
-
-
     def sec_finished(self, *args):
         self.next_screen = True
         self.in_result.set_disabled(False)
         self.btn.set_disabled(False)
         self.btn.text = 'Продолжить'
-
-
     def next(self):
         if not self.next_screen:
             self.btn.set_disabled(True)
@@ -113,41 +100,27 @@ class CheckSits(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.next_screen = False
-
-
         instr = Label(text=txt_sits, size_hint=(0.5, 1))
         self.lbl_sits = Sits(30)
         self.run = Runner(total=30, steptime=1.5, size_hint=(0.4, 1))
         self.run.bind(finished=self.run_finished)
-
-
         line = BoxLayout()
         vlay = BoxLayout(orientation='vertical', size_hint=(0.3, 1))
         vlay.add_widget(self.lbl_sits)
         line.add_widget(instr)
         line.add_widget(vlay)
         line.add_widget(self.run)
-
-
         self.btn = Button(text='Начать', size_hint=(0.3, 0.2), pos_hint={'center_x': 0.5})
         self.btn.background_color = btn_color
         self.btn.on_press = self.next
-
-
         outer = BoxLayout(orientation='vertical', padding=8, spacing=8)
         outer.add_widget(line)
         outer.add_widget(self.btn)
-
-
         self.add_widget(outer)
-
-
     def run_finished(self, instance, value):
         self.btn.set_disabled(False)
         self.btn.text = 'Продолжить'
         self.next_screen = True
-
-
     def next(self):
         if not self.next_screen:
             self.btn.set_disabled(True)
@@ -155,13 +128,9 @@ class CheckSits(Screen):
             self.run.bind(value=self.lbl_sits.next)
         else:
             self.manager.current = 'pulse2'
-
-
 class PulseScr2(Screen):
     def __init__(self, **kwargs):
         self.next_screen = False
-
-
         self.stage = 0
         super().__init__(**kwargs)
         instr = Label(text=txt_test3)
@@ -169,8 +138,6 @@ class PulseScr2(Screen):
         self.lbl_sec = Seconds(15)
         self.lbl_sec.bind(done=self.sec_finished)
         self.lbl1 = Label(text='Считайте пульс')
-
-
         lbl_result1 = Label(text='Результат:', halign='right')
         self.in_result1 = TextInput(text='0', multiline=False)
         line1.add_widget(lbl_result1)
@@ -178,8 +145,6 @@ class PulseScr2(Screen):
         line2 = BoxLayout(size_hint=(0.8, None), height='30sp')
         lbl_result2 = Label(text='Результат после отдыха:', halign='right')
         self.in_result2 = TextInput(text='0', multiline=False)
-
-
         self.in_result1.set_disabled(True)
         self.in_result2.set_disabled(True)
         line2.add_widget(lbl_result2)
@@ -195,18 +160,14 @@ class PulseScr2(Screen):
         outer.add_widget(line2)
         outer.add_widget(self.btn)
         self.add_widget(outer)
-
-
     def sec_finished(self, *args):
         if self.lbl_sec.done == True:
             if self.stage == 0:
-            # закончили первый подсчёт, отдыхаем
                 self.stage = 1
                 self.lbl1.text = 'Отдыхайте'
                 self.lbl_sec.restart(30)
                 self.in_result1.set_disabled(False)
             elif self.stage == 1:
-            # закончили отдых, считаем
                 self.stage = 2
                 self.lbl1.text='Считайте пульс'
                 self.lbl_sec.restart(15)
@@ -230,7 +191,6 @@ class PulseScr2(Screen):
                 p3 = 0
                 self.in_result2.text = str(p3)
             else:
-                # переходим
                 self.manager.current = 'result'
 class Result(Screen):
     def __init__(self, **kwargs):
